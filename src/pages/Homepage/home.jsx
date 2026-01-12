@@ -3,7 +3,7 @@ import React from 'react'
 const home = () => {
   return (
     <div>
-      this is Homepage by Kamrul
+      this is Homepage by Kamru updated
     </div>
   )
 }
