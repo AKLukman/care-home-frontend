@@ -19,6 +19,7 @@ export type TMarRecord = {
     status: TMedicationStatus;
     administeredBy: TAdmin
     patient: TPatient
+    updatedAt: string
 };
 
 export const MEDICATION_STATUS_OPTIONS: {

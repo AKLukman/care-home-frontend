@@ -45,6 +45,7 @@ const PatientDetails = () => {
                     <p><strong>Name: </strong>{patient?.name?.firstName} {patient?.name?.middleName} {patient?.name?.lastName}</p>
                     <p><strong>DOB: </strong>{dateFormat( patient?.dateOfBirth as string )}</p>
                     <p><strong>Gender: </strong>{patient?.gender}</p>
+                    <p><strong>Blood Group: </strong>{patient?.bloodGroup}</p>
                     <p><strong>Contact Number: </strong>{patient?.contactNo}</p>
                 </div>
             </section>

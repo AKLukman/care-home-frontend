@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import type { TMarRecord, TMedicationTime } from "../../../types/medicationRecordTypes";
 import { useUpdateStatusMutation } from "../../../redux/features/admin/medicationRecordApi";
 import { toast } from "sonner";
-import dateFormat from "../../../utils/dateFormat";
+import dateFormat, { dateAndTimeFormat } from "../../../utils/dateFormat";
 
 type MarChartProps = {
     records: TMarRecord[];
@@ -144,6 +144,8 @@ const MarChart = ( { records }: MarChartProps ) => {
                                                 {record?.administeredBy?.name?.middleName}{" "}
                                                 {record?.administeredBy?.name?.lastName}
                                             </strong>
+                                            <br />
+                                            <span>{dateAndTimeFormat( record?.updatedAt )}</span>
                                         </td>
                                     </tr>
                                 ) )}

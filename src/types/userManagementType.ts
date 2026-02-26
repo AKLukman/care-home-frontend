@@ -79,6 +79,7 @@ export type TAdmin = {
     gender: string
     dateOfBirth: string
     email: string
+    bloodGroup: string
     contactNo: string
     emergencyContactNo: string
     address: TAddress
@@ -92,6 +93,7 @@ export type TCareworker = {
     gender: string
     dateOfBirth: string
     email: string
+    bloodGroup: string
     designation: string
     contactNo: string
     emergencyContactNo: string
@@ -106,6 +108,7 @@ export type TPatient = {
     gender: string
     dateOfBirth: string
     email: string
+    bloodGroup: string
     designation: string
     contactNo: string
     emergencyContactNo: string
