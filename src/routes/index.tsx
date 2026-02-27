@@ -17,6 +17,7 @@ import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword/ResetPassword";
 import AdminRoute from "./AdminRoute";
 import PriavateRoutes from "./PrivateRoutes";
+import AdminHome from "../pages/Dashboard/Admin/AdminHome";
 
 
 
@@ -58,6 +59,10 @@ export const router = createBrowserRouter( [
             {
                 path: "change-password",
                 element: <ChangePassword></ChangePassword>
+            },
+            {
+                path: "",
+                element: <AdminRoute><AdminHome></AdminHome></AdminRoute>
             },
             {
                 path: "admin",
