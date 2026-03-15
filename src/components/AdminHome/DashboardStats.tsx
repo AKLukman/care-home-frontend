@@ -1,9 +1,12 @@
+import { useGetAllPatientQuery } from "../../redux/features/admin/patientManagementApi";
+
 const DashboardStats = () => {
+    const { data } = useGetAllPatientQuery( undefined )
     return (
         <div className="stats shadow w-full bg-base-100 rounded-2xl">
             <div className="stat">
                 <div className="stat-title">Total Residents</div>
-                <div className="stat-value text-primary">52</div>
+                <div className="stat-value text-primary">{data?.data?.length}</div>
                 <div className="stat-desc">+2 this week</div>
             </div>
 

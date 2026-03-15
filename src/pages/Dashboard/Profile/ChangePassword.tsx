@@ -78,10 +78,10 @@ const ChangePassword = () => {
                     <button
                         type="submit"
                         // disabled={isLoading}
-                        className="w-full rounded-xl bg-indigo-600 text-white py-2.5 text-sm font-medium transition hover:bg-indigo-700 disabled:opacity-60"
+                        className="w-full rounded-xl bg-indigo-600 text-white py-2.5 text-sm font-medium transition hover:bg-indigo-700 disabled:opacity-60 cursor-pointer"
                     >
                         {isLoading ? "Updating..." : "Update Password"}
-                        submit
+
                     </button>
                 </CareHomeForm>
             </div>

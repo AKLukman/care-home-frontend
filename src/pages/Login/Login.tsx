@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { verifyToken } from "../../utils/verifyToken";
 import { setUser, type TUser } from "../../redux/features/auth/authSlice";
 import { useState } from "react";
+import CareHomePasswordInput from "../../components/Form/CareHomePasswordField";
 
 const Login = () => {
     const dispatch = useAppDispatch();
@@ -79,10 +80,9 @@ const Login = () => {
                                 required
                             />
 
-                            <CareHomeInput
+                            <CareHomePasswordInput
                                 name="password"
                                 label="Password"
-                                type="password"
                                 placeholder="Enter your password"
                                 required
                             />

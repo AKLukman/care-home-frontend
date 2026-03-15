@@ -6,6 +6,7 @@ export const apiTags = {
     medication: "medication",
     schedule: "schedule",
     medicationRecord: "medicationRecord",
+    profile: "profile"
 } as const;
 
 export const apiTagList = [
@@ -14,7 +15,8 @@ export const apiTagList = [
     apiTags.careWorker,
     apiTags.medication,
     apiTags.schedule,
-    apiTags.medicationRecord
+    apiTags.medicationRecord,
+    apiTags.profile
 
 ] as const;
 

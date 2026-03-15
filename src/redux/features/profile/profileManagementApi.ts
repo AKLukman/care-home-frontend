@@ -1,6 +1,7 @@
 import type { TResponseRedux } from "../../../types/global";
 import type { TCareworker } from "../../../types/userManagementType";
 import { baseApi } from "../../api/baseApi";
+import { apiTags } from "../../tag-types";
 
 
 const profileManagementApi = baseApi.injectEndpoints( {
@@ -11,25 +12,29 @@ const profileManagementApi = baseApi.injectEndpoints( {
                 url: `/users/me`,
                 method: "GET"
             } ),
+            providesTags: [ apiTags.profile ],
             transformResponse: ( response: TResponseRedux<TCareworker> ) => {
                 return {
                     data: response.data,
                 };
             },
         } ),
-        changePassword: builder.mutation( {
+
+        updateProfile: builder.mutation( {
             query: ( data ) => ( {
-                url: "/auth/change-password",
-                method: "POST",
+                url: "/users/updateProfile",
+                method: "PATCH",
                 body: data,
             } ),
+            invalidatesTags: [ apiTags.profile ]
 
         } ),
     } ),
 
 } );
 export const {
-    useGetMeQuery
+    useGetMeQuery,
+    useUpdateProfileMutation
 
 } =
     profileManagementApi;

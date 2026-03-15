@@ -1,12 +1,32 @@
-import { useGetMeQuery } from "../../../redux/features/profile/profileManagementApi";
+import { useGetMeQuery, useUpdateProfileMutation } from "../../../redux/features/profile/profileManagementApi";
 import dateFormat from "../../../utils/dateFormat";
+import { toast } from "sonner";
 
 const Profile = () => {
     const { data, isLoading } = useGetMeQuery( undefined );
     const user = data?.data;
 
+    const [ updateProfile, { isLoading: profileLoading } ] = useUpdateProfileMutation();
 
+    const handleFileChange = async ( e: React.ChangeEvent<HTMLInputElement> ) => {
+        if ( !e.target.files || !e.target.files[ 0 ] ) return;
 
+        const selectedFile = e.target.files[ 0 ];
+
+        const formData = new FormData();
+        formData.append( "file", selectedFile );
+
+        try {
+            const res = await updateProfile( formData ).unwrap();
+
+            if ( res?.success ) {
+                toast.success( "Profile updated successfully!" );
+            }
+        } catch ( error ) {
+            console.error( error );
+            toast.error( "Failed to update profile." );
+        }
+    };
 
     if ( isLoading ) {
         return (
@@ -20,8 +40,7 @@ const Profile = () => {
         return <p className="p-6">No profile data found.</p>;
     }
 
-    const fullName = `${ user?.name?.firstName || "" } ${ user?.name?.middleName || ""
-        } ${ user?.name?.lastName || "" }`.trim();
+    const fullName = `${ user?.name?.firstName || "" } ${ user?.name?.middleName || "" } ${ user?.name?.lastName || "" }`.trim();
 
     const formattedAddress = user?.address
         ? [
@@ -35,12 +54,9 @@ const Profile = () => {
             .join( ", " )
         : undefined;
 
-
     const initials =
-        user?.name?.firstName?.charAt( 0 )?.toUpperCase() +
-        user?.name?.lastName?.charAt( 0 )?.toUpperCase();
-
-
+        ( user?.name?.firstName?.charAt( 0 )?.toUpperCase() || "" ) +
+        ( user?.name?.lastName?.charAt( 0 )?.toUpperCase() || "" );
 
     return (
         <div className="max-w-6xl mx-auto p-6">
@@ -48,17 +64,32 @@ const Profile = () => {
 
                 {/* LEFT PANEL */}
                 <div className="bg-white rounded-2xl shadow-sm border p-6 flex flex-col items-center text-center">
-                    {user?.profileImg ? (
-                        <img
-                            src={user?.profileImg}
-                            alt="Profile"
-                            className="w-28 h-28 rounded-full object-cover border"
+
+                    {/* Avatar */}
+                    <div className="w-28 h-28 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center text-3xl font-semibold text-gray-700 border">
+                        {profileLoading ? (
+                            <span className="loading loading-spinner loading-md"></span>
+                        ) : user?.profileImg ? (
+                            <img
+                                src={user.profileImg}
+                                alt="Profile"
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <span>{initials}</span>
+                        )}
+                    </div>
+
+                    {/* Upload option */}
+                    <label className="mt-3 text-sm text-blue-600 cursor-pointer hover:underline">
+                        Change profile photo
+                        <input
+                            type="file"
+                            onChange={handleFileChange}
+                            className="hidden"
+                            disabled={profileLoading}
                         />
-                    ) : (
-                        <div className="w-28 h-28 rounded-full bg-gray-100 flex items-center justify-center text-3xl font-semibold text-gray-700">
-                            {initials}
-                        </div>
-                    )}
+                    </label>
 
                     <h2 className="mt-4 text-xl font-semibold text-gray-800">
                         {fullName}
@@ -87,19 +118,12 @@ const Profile = () => {
                     </h3>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-10">
-
                         <InfoItem label="Email" value={user?.email} />
                         <InfoItem label="Contact Number" value={user?.contactNo} />
-                        <InfoItem
-                            label="Emergency Contact"
-                            value={user?.emergencyContactNo}
-                        />
+                        <InfoItem label="Emergency Contact" value={user?.emergencyContactNo} />
                         <InfoItem label="Date of Birth" value={dateFormat( user?.dateOfBirth )} />
                         <InfoItem label="Gender" value={user?.gender} />
                         <InfoItem label="Address" value={formattedAddress} />
-
-
-
                     </div>
                 </div>
             </div>
@@ -117,9 +141,7 @@ const InfoItem = ( {
     return (
         <div>
             <p className="text-xs text-gray-500 mb-1">{label}</p>
-            <p className="text-sm font-medium text-gray-800">
-                {value || "—"}
-            </p>
+            <p className="text-sm font-medium text-gray-800">{value || "—"}</p>
         </div>
     );
 };

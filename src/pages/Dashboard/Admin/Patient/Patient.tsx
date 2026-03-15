@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useGetAllPatientQuery } from "../../../../redux/features/admin/patientManagementApi"
 import CreatePatientModal from "./CreatePatientModal"
-import { FaEye, FaTrash } from "react-icons/fa6"
+import { FaEye } from "react-icons/fa6"
 import { Link } from "react-router-dom"
 import { useAppSelector } from "../../../../redux/hooks"
 import { useCurrentUser } from "../../../../redux/features/auth/authSlice"
@@ -11,19 +11,30 @@ const Patient = () => {
     const [ search, setSearch ] = useState( "" )
     const [ open, setOpen ] = useState( false )
     const user = useAppSelector( useCurrentUser )
+    const [ page, setPage ] = useState( 1 );
+    const limit = 10;
 
-    const { data: patients, isLoading } = useGetAllPatientQuery( search
-        ? [
-            {
-                name: "searchTerm",
-                value: search,
-            },
+    const { data, isLoading } = useGetAllPatientQuery(
+        [
+            { name: "page", value: page },
+            { name: "limit", value: limit },
+            ...( search
+                ? [
+                    {
+                        name: "searchTerm",
+                        value: search,
+                    },
+                ]
+                : [] ),
         ]
-        : undefined )
+    );
 
-    const handleDelete = async ( id: string ) => {
-        console.log( id )
-    }
+
+    const patients = data?.data || [];
+
+    const meta = data?.meta;
+
+    const totalPage = Math.ceil( ( meta?.total || 0 ) / limit );
 
     return (
         <div className="space-y-6">
@@ -58,7 +69,7 @@ const Patient = () => {
                             <th>Name</th>
                             <th>Contact Number</th>
                             <th>View</th>
-                            <th>Delete</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -68,7 +79,7 @@ const Patient = () => {
                             </tr>
                         )}
 
-                        {patients?.data?.map( ( patient ) => (
+                        {patients?.map( ( patient ) => (
                             <tr key={patient?._id}>
                                 <td>{patient.name.firstName} {patient?.name?.middleName} {patient.name.lastName}</td>
                                 <td>{patient.contactNo}</td>
@@ -81,7 +92,7 @@ const Patient = () => {
                                         <span className="uppercase">View</span>
                                     </Link>
                                 </td>
-                                <td>
+                                {/* <td>
                                     <button
                                         type="button"
                                         onClick={() => handleDelete( patient?._id )}
@@ -90,18 +101,62 @@ const Patient = () => {
                                         <FaTrash />
                                         <span className="uppercase">Delete</span>
                                     </button>
-                                </td>
+                                </td> */}
 
                             </tr>
                         ) )}
 
-                        {!isLoading && patients?.data?.length === 0 && (
+                        {!isLoading && patients?.length === 0 && (
                             <tr>
                                 <td colSpan={3}>No patients found</td>
                             </tr>
                         )}
                     </tbody>
                 </table>
+            </div>
+            {/* paginations */}
+            <div className="flex items-center justify-center mt-8">
+
+                <div className="flex items-center gap-1 bg-white border rounded-lg shadow-sm p-1">
+
+                    {/* Prev */}
+                    <button
+                        disabled={page === 1}
+                        onClick={() => setPage( page - 1 )}
+                        className="px-3 py-2 text-sm rounded-md hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                        ← Prev
+                    </button>
+
+                    {/* Page Numbers */}
+                    {[ ...Array( totalPage ) ].map( ( _, index ) => {
+                        const pageNumber = index + 1;
+
+                        return (
+                            <button
+                                key={pageNumber}
+                                onClick={() => setPage( pageNumber )}
+                                className={`min-w-[36px] h-9 text-sm rounded-md cursor-pointer transition ${ page === pageNumber
+                                    ? "bg-blue-600 text-white shadow"
+                                    : "hover:bg-gray-100 text-gray-700"
+                                    }`}
+                            >
+                                {pageNumber}
+                            </button>
+                        );
+                    } )}
+
+                    {/* Next */}
+                    <button
+                        disabled={page === totalPage}
+                        onClick={() => setPage( page + 1 )}
+                        className="px-3 py-2 text-sm rounded-md hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                        Next →
+                    </button>
+
+                </div>
+
             </div>
 
             {/* Modal */}

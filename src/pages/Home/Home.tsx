@@ -6,6 +6,7 @@ import GallerySection from "../../components/Home/GallerySection"
 import CTASection from "../../components/Home/CTASection"
 import FAQSection from "../../components/Home/FAQSection"
 
+
 const Home = () => {
     return (
         <div>
